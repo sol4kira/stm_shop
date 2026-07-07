@@ -1,0 +1,140 @@
+const db =require('../Config/db');
+
+//Get all Purchase Credit
+const  getPurchaseCredit = async(req,res)=>{
+
+    try{
+        const [rows] = await db.query(
+            `SELECT purchaseCreditId,
+                purchaseCreditAmount,
+                DATE_FORMAT(purchaseCreditDueDate, '%Y-%m-%d') AS purchaseDate,
+                purchaseId,
+                supplierId
+            FROM purchase_credit`
+        );
+
+        if(rows.length === 0){
+            return res.status(404).json({message:'Purchase Credit not found'});
+        }
+        res.status(200).json(rows);
+    }catch(error){
+        res.status(500).json({message:'Server error.',error:error.message});
+    }
+};
+
+// Get Purchase credit by id
+const getPurchaseCreditById = async(req, res)=>{
+    const {id} = req.params;
+
+    try{
+        const [rows] = await db.query(
+            `SELECT purchaseCreditId,
+                purchaseCreditAmount,
+                DATE-FORMAT(purchaseCreditDueDate, '%Y-%m-%d') AS purchaseCreditDate,
+                purchaseId,
+                supplierId
+            FROM purchase_credit WHERE purchaseCreditId =?`,[id]
+        );
+        if(rows.length === 0){
+            return res.status(404).json({message:'Purchase Credit not found.'});
+        }
+
+        res.status(200).json({rows});
+    }catch(error){
+        res.status(500).json({message:'Server error.',error:error.message})
+    }
+};
+
+// Get Purchase Credit by supplier id 
+const getPurchaseCreditBySupplierId = async(req, res)=>{
+    const {supplierId} = req.params;
+
+    try{
+        const [rows] = await db.query(
+            `SELECT 
+                purchaseCreditId,
+                purchaseCreditAmount,
+                DATE-FORMAT(purchaseCreditDueDate, '%Y-%m-%d') AS purchaseCreditDate,
+                purchaseId,
+                supplierId
+            FROM purchase_credit WHERE supplierId=?`,[supplierId]
+        );
+        if(rows.length === 0){
+            return res.status(404).json({message:'Purchase Credit not found.'});
+        }
+
+        res.status(200).json({rows});
+    }catch(error){
+        res.status(500).json({message:'Server error.',error:error.message})
+    }
+};
+
+//Credit Payment Made 
+const createPurchaseCreditPayment = async (req, res) => {
+    
+    const { creditId } = req.params;
+    const { purchaseCreditPaymentAmount } = req.body;
+    try {
+        // Step 1: Check if credit exists
+        const [creditRows] = await db.query(
+            'SELECT purchaseCreditAmount FROM purchase_credit WHERE purchaseCreditId = ?', [creditId]
+        );
+
+        if (creditRows.length === 0) {
+            return res.status(404).json({ message: 'Purchase credit not found' });
+        }
+
+        // Step 2: Check if already fully paid
+        if (creditRows[0].purchaseCreditAmount <= 0) {
+            return res.status(400).json({ message: 'This credit is already fully paid' });
+        }
+
+        // Step 3: Validate payment amount
+        if (!purchaseCreditPaymentAmount) {
+            return res.status(400).json({ message: 'Payment amount is required' });
+        }
+
+        // Step 4: Calculate remaining amount
+        const finalAmount = creditRows[0].purchaseCreditAmount - purchaseCreditPaymentAmount;
+
+        // Step 5: Insert payment record
+        await db.query(
+            'INSERT INTO purchase_credit_payment(purchaseCreditPaymentAmount, purchaseCreditId) VALUES (?, ?)',
+            [purchaseCreditPaymentAmount, creditId]
+        );
+        // Step 6: Update credit amount
+        await db.query(
+            'UPDATE purchase_credit SET purchaseCreditAmount = ? WHERE purchaseCreditId = ?',
+            [finalAmount, creditId]
+        );
+
+        res.status(201).json({
+            message: 'Payment recorded successfully',
+            remainingAmount: finalAmount
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+const getPurchaseCreditPayments = async(req, res) => {
+    const {creditId} = req.params;
+    try {
+        const [payments] = await db.query(
+            `SELECT 
+                purchaseCreditPaymentId,
+                purchaseCreditPaymentAmount,
+                DATE_FORMAT(purchaseCreditPaymentDate, '%Y-%m-%d') AS paymentDate
+            FROM purchase_credit_payment 
+            WHERE purchaseCreditId = ?`, [creditId]
+        );
+        res.status(200).json(payments);
+    } catch(error) {
+        res.status(500).json({message: 'Server error.', error: error.message});
+    }
+};
+
+module.exports = {
+    getPurchaseCredit,getPurchaseCreditById,getPurchaseCreditBySupplierId,createPurchaseCreditPayment,getPurchaseCreditPayments
+};
