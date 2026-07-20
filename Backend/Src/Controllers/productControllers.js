@@ -97,9 +97,11 @@ const deleteProduct = async(req,res)=>{
 const getLowStockProducts = async (req, res) => {
     try {
         const [products] = await db.query(
-            `SELECT productId, productName, quantity 
-            FROM products 
-            WHERE quantity < 10`
+            `SELECT productName, productType, productQuantity, productSellingPrice
+            FROM product
+            WHERE productQuantity < 10
+            ORDER BY productQuantity ASC
+            LIMIT 5`
         );
         res.status(200).json(products);
     } catch (error) {

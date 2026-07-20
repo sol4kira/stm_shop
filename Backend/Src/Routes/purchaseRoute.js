@@ -5,12 +5,12 @@ const {
     createPurchase,
     getAllPurchase,
     getPurchaseById,
-    getNearestSupplierCreditDeadline
+    getDashboardPurchaseTotal
 }= require('../Controllers/purchaseControllers.js');
 
 router.post('/',createPurchase);
 router.get('/',getAllPurchase);
-router.get('/nearest-deadline',getNearestSupplierCreditDeadline);
+router.get('/todays-purchase-total',getDashboardPurchaseTotal);
 router.get('/:id',getPurchaseById);
 
 module.exports = router;

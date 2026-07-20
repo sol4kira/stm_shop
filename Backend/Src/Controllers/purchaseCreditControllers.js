@@ -135,6 +135,23 @@ const getPurchaseCreditPayments = async(req, res) => {
     }
 };
 
+//get purchase credit top 5
+const getDashboardSupplierCredit = async (req, res) => {
+    try {
+        const [products] = await db.query(
+            `SELECT s.supplierName,pc.purchaseCreditAmount,pc.purchaseCreditDueDate
+            FROM purchase_credit pc
+            JOIN supplier s ON pc.supplierId = s.supplierId
+            WHERE pc.purchaseCreditAmount > 0
+            ORDER BY pc.purchaseCreditDueDate ASC
+            LIMIT 5`
+        );
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 module.exports = {
-    getPurchaseCredit,getPurchaseCreditById,getPurchaseCreditBySupplierId,createPurchaseCreditPayment,getPurchaseCreditPayments
+    getPurchaseCredit,getPurchaseCreditById,getPurchaseCreditBySupplierId,createPurchaseCreditPayment,getPurchaseCreditPayments,getDashboardSupplierCredit
 };

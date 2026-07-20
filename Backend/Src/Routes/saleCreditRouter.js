@@ -6,11 +6,13 @@ const{
     getSaleCreditById,
     getSaleCreditByCustomerId,
     createSaleCreditPayment,
-    getSaleCreditPayments
+    getSaleCreditPayments,
+    getDashboardCustomerCredit
 }= require('../Controllers/saleCreditControllers.js');
 
 router.get('/', getSaleCredit);
 router.get('/customer/:customerId', getSaleCreditByCustomerId);
+router.get('/sale-credit-deadline',getDashboardCustomerCredit);
 router.get('/:id', getSaleCreditById);
 router.post('/:creditId/payment', createSaleCreditPayment);
 router.get('/:creditId/payments', getSaleCreditPayments);

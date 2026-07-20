@@ -122,22 +122,21 @@ const getPurchaseById = async (req,res)=>{
         res.status(500).json({message:'Server error.',error:error.message})
     }
 };
-// deadline
-const getNearestSupplierCreditDeadline = async (req, res) => {
+
+//today's total purchase 
+const getDashboardPurchaseTotal = async (req, res) => {
     try {
-        const [rows] = await db.query(
-            `SELECT purchaseCreditId, purchaseCreditDueDate, purchaseCreditAmount
-             FROM purchase_credit
-             WHERE purchaseCreditAmount > 0
-             ORDER BY purchaseCreditDueDate ASC
-             LIMIT 1`
+        const [result] = await db.query(
+            `SELECT COALESCE(SUM(purchaseTotalAmount), 0) AS todaysPurchaseTotal
+             FROM purchase
+             WHERE DATE(purchaseDate) = CURDATE()`
         );
-        res.status(200).json(rows[0] || null);
+        res.status(200).json(result[0]);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
 module.exports = {
-    createPurchase,getAllPurchase,getPurchaseById,getNearestSupplierCreditDeadline
+    createPurchase,getAllPurchase,getPurchaseById,getDashboardPurchaseTotal
 };

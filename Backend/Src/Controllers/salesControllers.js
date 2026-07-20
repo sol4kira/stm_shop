@@ -117,8 +117,22 @@ const getSaleById = async (req,res)=>{
     }
 };
 
+//today's total sale
+const getDashboardSalesTotal = async (req, res) => {
+    try {
+        const [result] = await db.query(
+            `SELECT COALESCE(SUM(saleTotalAmount), 0) AS todaysSalesTotal
+            FROM sale
+            WHERE DATE(saleDate) = CURDATE()`
+        );
+        res.status(200).json(result[0]);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 module.exports = {
-    createSale,getAllSale,getSaleById
+    createSale,getAllSale,getSaleById,getDashboardSalesTotal
 };
 
 

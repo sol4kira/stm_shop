@@ -10,7 +10,7 @@ const { getAllProducts,
  } = require ('../Controllers/productControllers.js')
 
 router.get('/',getAllProducts);
-route.get('/low-stack',getLowStockProducts)
+router.get('/low-stock',getLowStockProducts);
 router.get('/:id',getProductById);
 router.post('/',createProduct);
 router.put('/:id',updateProduct);

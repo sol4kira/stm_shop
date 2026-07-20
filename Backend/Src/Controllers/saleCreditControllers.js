@@ -128,6 +128,23 @@ const createSaleCreditPayment = async (req, res) => {
     }
 };
 
+//get sell credit top 5
+const getDashboardCustomerCredit = async (req, res) => {
+    try {
+        const [products] = await db.query(
+            `SELECT c.customerName,sc.saleCreditAmount,sc.saleCreditDueDate
+            FROM sale_credit sc
+            JOIN customer c ON sc.customerId = c.customerId
+            WHERE sc.saleCreditAmount > 0
+            ORDER BY sc.saleCreditDueDate ASC
+            LIMIT 5`
+        );
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 module.exports = {
-    getSaleCredit,getSaleCreditById,getSaleCreditByCustomerId,createSaleCreditPayment,getSaleCreditPayments
+    getSaleCredit,getSaleCreditById,getSaleCreditByCustomerId,createSaleCreditPayment,getSaleCreditPayments,getDashboardCustomerCredit
 };

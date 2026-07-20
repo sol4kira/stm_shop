@@ -18,13 +18,14 @@ function Sales(){
         salePaymentType: "cash",
         salePaymentAmount: ""
     });
+    const [loading, setLoading] = useState(true);
     const [customers, setCustomers] = useState([]);
     const fetchSales=(() =>{
         fetch("http://localhost:3000/api/sales")
             .then(res => res.json())
-            .then(data => setSale(data));
+            .then(data => {setSale(data);
+                setLoading(false);});
     })
-
     useEffect(() => {
         fetchSales();
     fetch("http://localhost:3000/api/customer")
@@ -36,6 +37,9 @@ function Sales(){
         .then(data => setProduct(data));
 
     }, []);
+    if (loading) {
+    return <div>Loading...</div>;
+    }
     
     //sort sales
     const salesWithNames = sale.map(s => ({

@@ -6,11 +6,13 @@ const{
     getPurchaseCreditById,
     getPurchaseCreditBySupplierId,
     createPurchaseCreditPayment,
-    getPurchaseCreditPayments
+    getPurchaseCreditPayments,
+    getDashboardSupplierCredit
 }= require('../Controllers/purchaseCreditControllers.js');
 
 router.get('/', getPurchaseCredit);
 router.get('/supplier/:supplierId', getPurchaseCreditBySupplierId);
+router.get('/purchase-credit-deadline',getDashboardSupplierCredit);
 router.get('/:id', getPurchaseCreditById);
 router.post('/:creditId/payment', createPurchaseCreditPayment);
 router.get('/:creditId/payment', getPurchaseCreditPayments);

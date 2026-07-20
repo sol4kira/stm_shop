@@ -18,16 +18,24 @@ function Products(){
     productQuantity:"",
     productDescription:""
    })
+   
+const [loading, setLoading] = useState(true);
 
     const fetchProducts = () => {
                                     fetch("http://localhost:3000/api/products")
                                     .then(response => response.json())
-                                    .then(data => setProduct(data));
+                                    .then(data => {setProduct(data);
+                                        setLoading(false);
+                                    });
                                 };
 
     useEffect(() => {
         fetchProducts();
         }, []);
+        
+        if (loading) {
+    return <div>Loading...</div>;
+    }
 
     const sortedProducts = [...product].sort((a, b) => {
         if (filteredBy === "name") {
