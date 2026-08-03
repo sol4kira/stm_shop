@@ -139,7 +139,7 @@ const getPurchaseCreditPayments = async(req, res) => {
 const getDashboardSupplierCredit = async (req, res) => {
     try {
         const [products] = await db.query(
-            `SELECT s.supplierName,pc.purchaseCreditAmount,pc.purchaseCreditDueDate
+            `SELECT s.supplierName,pc.purchaseCreditAmount,pc.purchaseCreditDueDate,pc.purchaseId
             FROM purchase_credit pc
             JOIN supplier s ON pc.supplierId = s.supplierId
             WHERE pc.purchaseCreditAmount > 0

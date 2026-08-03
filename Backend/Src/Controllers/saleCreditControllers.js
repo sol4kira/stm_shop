@@ -132,7 +132,7 @@ const createSaleCreditPayment = async (req, res) => {
 const getDashboardCustomerCredit = async (req, res) => {
     try {
         const [products] = await db.query(
-            `SELECT c.customerName,sc.saleCreditAmount,sc.saleCreditDueDate
+            `SELECT c.customerName,sc.saleCreditAmount,sc.saleCreditDueDate,sc.saleId
             FROM sale_credit sc
             JOIN customer c ON sc.customerId = c.customerId
             WHERE sc.saleCreditAmount > 0

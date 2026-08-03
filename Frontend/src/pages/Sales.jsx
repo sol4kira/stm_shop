@@ -171,9 +171,9 @@ function Sales(){
                                 <p>The Total amount is {totalSaleAmount}</p>
                                 {/* if payment method is set to credit this can be allowed to be 0 and less than the selling price but if not the actual price must be payed. */}
                                 <label htmlFor="amountPayed">Sale Payment Amount</label>
-                                <input value={payment.salePaymentAmount}onChange={(e) => setPayment({...payment, salePaymentAmount: e.target.value})}/>
+                                <input id="amountPayed" value={payment.salePaymentAmount}onChange={(e) => setPayment({...payment, salePaymentAmount: e.target.value})}/>
                                 <label htmlFor="paymentMethod">Choose Payment Method</label>
-                                <select value={payment.salePaymentType} onChange={(e)=>setPayment({...payment,salePaymentType: e.target.value})}>
+                                <select id= "paymentMethod" value={payment.salePaymentType} onChange={(e)=>setPayment({...payment,salePaymentType: e.target.value})}>
                                     <option value="cash"defaultChecked>Cash</option>
                                     <option value="mobile_banking">Mobile Banking</option>
                                     <option value="credit">Credit</option>

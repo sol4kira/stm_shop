@@ -45,37 +45,100 @@ function Dashboard(){
     },[])
     
     return(
-        // row 1 low stock and total sales
-        <div className={styles.row}>
-            <div className={styles.tables}>
-            <table className={styles.lowStockTable} onClick={() => navigate('/Products')}>
-                <thead>
-                    <tr>
-                        <th className={styles.names}>Product Name</th>
-                        <th className={styles.names}>Product Type</th>
-                        <th className={styles.names}>Quantity</th>
-                        <th className={styles.names}>Product selling price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {lowStock.map(items=>(
-                    <tr key={items.productId}>
-                            <td className={styles.alt}>{items.productName}</td>
-                            <td className={styles.alt}>{items.productType}</td>
-                            <td className={styles.alt}>{items.productQuantity}</td>
-                            <td className={styles.alt}>{items.productSellingPrice}</td>
+        <div>
+            <div className={styles.top}>
+                <h1 className={styles.title}>DashBoard</h1>
+                <p className={styles.date}>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            </div>
+            <div className={styles.dashboardGrid}>
+                <div className={styles.tablesColumn}>
+                    <table className={styles.lowStockTable} onClick={() => navigate('/Products')}>
+                        <thead>
+                            <tr>
+                                <th className={styles.names}>Product Name</th>
+                                <th className={styles.names}>Product Type</th>
+                                <th className={styles.names}>Quantity</th>
+                                <th className={styles.names}>Product selling price</th>
                             </tr>
-                        ))
-                        }
-                </tbody>
-            </table>
-            </div>
-            <div className={styles.totalSaleCard} onClick={() => navigate('/sales')}>
-                <TbUserDollar />
-                <h3>Sales</h3>
-                <p className={styles.cardLabel}>Today's Sales Total</p>
-                <p className={styles.cardInput}>{totalSale.toFixed(2)}</p>
-            </div>
+                        </thead>
+                        <tbody>
+                            {lowStock.map(items=>(
+                            <tr key={items.productId}>
+                                    <td className={styles.alt}>{items.productName}</td>
+                                    <td className={styles.alt}>{items.productType}</td>
+                                    <td className={styles.alt}>{items.productQuantity}</td>
+                                    <td className={styles.alt}>{items.productSellingPrice}</td>
+                                    </tr>
+                                ))
+                                }
+                        </tbody>
+                    </table>
+                                    
+                    <table className={styles.customerCredit} onClick={() => navigate('/credits/customer')}>
+                        <thead>
+                            <tr>
+                                <th className={styles.names}>Customer Name</th>
+                                <th className={styles.names}>Sale ID</th>
+                                <th className={styles.names}>Price Left</th>
+                                <th className={styles.names}>Deadline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {customerCredit.map(items => {
+                                const isOverdue = new Date(items.saleCreditDueDate) < new Date();
+                                return (
+                                    <tr key={items.saleId} className={isOverdue ? styles.overdue : ""}>
+                                        <td className={styles.alt}>{items.customerName}</td>
+                                        <td className={styles.alt}>{items.saleId}</td>
+                                        <td className={styles.alt}>{items.saleCreditAmount}</td>
+                                        <td className={styles.alt}>{new Date(items.saleCreditDueDate).toLocaleDateString()}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                                        
+                    <table className={styles.supplierCredit} onClick={() => navigate('/credits/supplier')}>
+                        <thead>
+                            <tr>
+                                <th className={styles.names}>Supplier Name</th>
+                                <th className={styles.names}>Purchase ID</th>
+                                <th className={styles.names}>Price Left</th>
+                                <th className={styles.names}>Deadline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {supplierCredit.map(items => {
+                                const isOverdue = new Date(items.purchaseCreditDueDate) < new Date();
+                                return (
+                                    <tr key={items.supplierCreditId} className={isOverdue ? styles.overdue : ""}>
+                                        <td className={styles.alt}>{items.supplierName}</td>
+                                        <td className={styles.alt}>{items.purchaseId}</td>
+                                        <td className={styles.alt}>{items.purchaseCreditAmount}</td>
+                                        <td className={styles.alt}>{new Date(items.purchaseCreditDueDate).toLocaleDateString()}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                                        
+                <div className={styles.cardsColumn}>
+                    <div className={styles.totalCard} onClick={() => navigate('/sales')}>
+                        <TbUserDollar size={32} />
+                        <h3>Sales</h3>
+                        <p className={styles.cardLabel}>Today's Sales Total</p>
+                        <p className={styles.cardInput}>{totalSale.toFixed(2)}</p>
+                    </div>
+                                        
+                    <div className={styles.totalCard} onClick={() => navigate('/purchase')}>
+                        <TbUserDollar size={32} />
+                        <h3>Purchase</h3>
+                        <p className={styles.cardLabel}>Today's Purchase Total</p>
+                        <p className={styles.cardInput}>{totalPurchase.toFixed(2)}</p>
+                    </div>
+                </div>
+            </div>                
         </div>
     )
 }
