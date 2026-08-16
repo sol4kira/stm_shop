@@ -136,7 +136,55 @@ const getDashboardPurchaseTotal = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+// purchase report summary
+const getPurchaseSummary = async (req, res) => {
+    const { from, to } = req.query;
+    try {
+        const [result] = await db.query(
+            `SELECT COALESCE(SUM(purchaseTotalAmount), 0) AS totalAmount,
+                    COUNT(*) AS totalCount
+             FROM purchase
+             WHERE DATE(purchaseDate) BETWEEN ? AND ?`,
+            [from, to]
+        );
+        res.status(200).json(result[0]);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+//purchase report detail
+const getPurchaseDetails = async (req, res) => {
+    const { from, to, page = 1, limit = 10 } = req.query;
+    const offset = (page - 1) * limit;
+    try {
+        const [rows] = await db.query(
+            `SELECT p.purchaseId, p.purchaseTotalAmount, p.purchaseDate
+             FROM purchase p
+             LEFT JOIN purchase_payment pp on p.purchaseId = pp.purchaseId
+             WHERE DATE(purchaseDate) BETWEEN ? AND ?
+             ORDER BY purchaseDate DESC
+             LIMIT ? OFFSET ?
+             `,
+            [from, to, Number(limit), Number(offset)]
+        );
+        const [countResult] = await db.query(
+            `SELECT COUNT(*) AS totalRows
+             FROM purchase p
+             WHERE DATE(p.purchaseDate) BETWEEN ? AND ?`,
+            [from, to]
+        );
+        res.status(200).json({
+            rows,
+            totalRows: countResult[0].totalRows,
+            totalPages: Math.ceil(countResult[0].totalRows / limit),
+            currentPage: Number(page)
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
 
 module.exports = {
-    createPurchase,getAllPurchase,getPurchaseById,getDashboardPurchaseTotal
+    createPurchase,getAllPurchase,getPurchaseById,getDashboardPurchaseTotal,getPurchaseSummary,getPurchaseDetails
 };

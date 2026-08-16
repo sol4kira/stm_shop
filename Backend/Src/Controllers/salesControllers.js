@@ -131,8 +131,57 @@ const getDashboardSalesTotal = async (req, res) => {
     }
 };
 
+// Sales report summary
+const getSalesSummary = async (req, res) => {
+    const { from, to } = req.query;
+    try {
+        const [result] = await db.query(
+            `SELECT COALESCE(SUM(saleTotalAmount), 0) AS totalAmount,
+                    COUNT(*) AS totalCount
+             FROM sale
+             WHERE DATE(saleDate) BETWEEN ? AND ?`,
+            [from, to]
+        );
+        res.status(200).json(result[0]);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+//Sales report detail
+const getSalesDetails = async (req, res) => {
+    const { from, to, page = 1, limit = 10 } = req.query;
+    const offset = (page - 1) * limit;
+    try {
+        const [rows] = await db.query(
+            `SELECT s.saleId, s.saleTotalAmount, s.saleDate
+             FROM sale s
+             LEFT JOIN sale_payment ss on s.saleId = ss.saleId
+             WHERE DATE(saleDate) BETWEEN ? AND ?
+             ORDER BY saleDate DESC
+             LIMIT ? OFFSET ?
+             `,
+            [from, to, Number(limit), Number(offset)]
+        );
+        const [countResult] = await db.query(
+            `SELECT COUNT(*) AS totalRows
+             FROM sale s
+             WHERE DATE(s.saleDate) BETWEEN ? AND ?`,
+            [from, to]
+        );
+        res.status(200).json({
+            rows,
+            totalRows: countResult[0].totalRows,
+            totalPages: Math.ceil(countResult[0].totalRows / limit),
+            currentPage: Number(page)
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 module.exports = {
-    createSale,getAllSale,getSaleById,getDashboardSalesTotal
+    createSale,getAllSale,getSaleById,getDashboardSalesTotal,getSalesDetails,getSalesSummary
 };
 
 

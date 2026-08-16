@@ -131,7 +131,7 @@ const createSaleCreditPayment = async (req, res) => {
 //get sell credit top 5
 const getDashboardCustomerCredit = async (req, res) => {
     try {
-        const [products] = await db.query(
+        const [credit] = await db.query(
             `SELECT c.customerName,sc.saleCreditAmount,sc.saleCreditDueDate,sc.saleId
             FROM sale_credit sc
             JOIN customer c ON sc.customerId = c.customerId
@@ -139,12 +139,58 @@ const getDashboardCustomerCredit = async (req, res) => {
             ORDER BY sc.saleCreditDueDate ASC
             LIMIT 5`
         );
-        res.status(200).json(products);
+        res.status(200).json(credit);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
+//credit summery
+const getCustomerCreditReportSummary = async (req,res) =>{
+    try{
+        const [result] = await db.query(
+        `SELECT COALESCE(SUM(saleCreditAmount),0) AS totalOwed,
+            COUNT(*) AS totalCount
+         FROM sale_credit
+         where saleCreditAmount >   0  
+        `);
+        res.status(200).json(result[0]);
+    }catch(error){
+        res.status(500).json({message:'Server error', error:error.message})
+    }
+}
+
+// customer credit report
+const getCustomerCreditsReportDetails = async (req,res) =>{
+    const{page=1,limit=10}=req.query;
+    const offset = (page-1)*limit;
+    try{
+        const [credit] = await db.query(
+            `SELECT c.customerName,sc.saleCreditAmount,sc.saleCreditDueDate,sc.saleId
+            FROM sale_credit sc
+            JOIN customer c ON sc.customerId = c.customerId
+            WHERE sc.saleCreditAmount > 0
+            ORDER BY sc.saleCreditDueDate ASC
+            LIMIT ? OFFSET ?`,
+            [Number(limit),Number(offset)]
+        );
+        const [countResult] = await db.query(
+            `SELECT COUNT(*) AS totalRows
+             FROM sale_credit
+             WHERE saleCreditAmount > 0`
+        );
+
+        res.status(200).json({
+            rows: credit,
+            totalRows: countResult[0].totalRows,
+            totalPages: Math.ceil(countResult[0].totalRows / limit),
+            currentPage: Number(page)
+        });
+    }catch(error){
+        res.status(500).json({message:'Server error', error:error.message})
+    }
+}
+
 module.exports = {
-    getSaleCredit,getSaleCreditById,getSaleCreditByCustomerId,createSaleCreditPayment,getSaleCreditPayments,getDashboardCustomerCredit
+    getSaleCredit,getSaleCreditById,getSaleCreditByCustomerId,createSaleCreditPayment,getSaleCreditPayments,getDashboardCustomerCredit,getCustomerCreditsReportDetails
 };
