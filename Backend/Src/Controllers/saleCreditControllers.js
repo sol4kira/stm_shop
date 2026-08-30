@@ -192,5 +192,5 @@ const getCustomerCreditsReportDetails = async (req,res) =>{
 }
 
 module.exports = {
-    getSaleCredit,getSaleCreditById,getSaleCreditByCustomerId,createSaleCreditPayment,getSaleCreditPayments,getDashboardCustomerCredit,getCustomerCreditsReportDetails
+    getSaleCredit,getSaleCreditById,getSaleCreditByCustomerId,createSaleCreditPayment,getSaleCreditPayments,getDashboardCustomerCredit,getCustomerCreditsReportDetails,getCustomerCreditReportSummary
 };
