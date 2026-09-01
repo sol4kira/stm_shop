@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react"
 import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
+import { API_URL } from "../../client";
 
 function Customers(){
    const [customer, setCustomer] = useState([]);
@@ -17,7 +18,7 @@ function Customers(){
    })
 
     const fetchCustomer = () => {
-                                    fetch("http://localhost:3000/api/customer")
+                                    fetch(`${API_URL}/api/customer`)
                                     .then(response => response.json())
                                     .then(data => setCustomer(data));
                                 };
@@ -64,7 +65,7 @@ function Customers(){
 
                             
                             <button type="submit" className={styles.submit} onClick={()=>{
-                                fetch(`http://localhost:3000/api/customer`,{
+                                fetch(`${API_URL}/api/customer`,{
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(newCustomer)
@@ -136,7 +137,7 @@ function Customers(){
                             <div className={styles.modelButton}>
                                 <button type="submit"className={styles.submit} 
                                         onClick={() => {
-                                        fetch(`http://localhost:3000/api/customer/${editData.customerId}`, {
+                                        fetch(`${API_URL}/api/customer/${editData.customerId}`, {
                                             method: 'PUT',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(editData)

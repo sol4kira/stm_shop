@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './dashboard.module.css'
 import { useState, useEffect } from 'react'
 import { TbUserDollar } from "react-icons/tb";
+import { API_URL } from "../../client";
 function Dashboard(){
     const [lowStock,setLowStock] = useState([]);
     const [customerCredit,setCustomerCredit] = useState([]);
@@ -11,27 +12,27 @@ function Dashboard(){
     const navigate= useNavigate();
 
     const fetchLowStack = () =>{
-        fetch("http://localhost:3000/api/products/low-stock")
+        fetch(`${API_URL}/api/products/low-stock`)
         .then(response=>response.json())
         .then(data=>setLowStock(data) )
     }
     const fetchCustomerCredit = () =>{
-        fetch("http://localhost:3000/api/sale-credit/sale-credit-deadline")
+        fetch(`${API_URL}/api/sale-credit/sale-credit-deadline`)
         .then(response=>response.json())
         .then(data=>setCustomerCredit(data))
     }
     const fetchSupplierCredit= () =>{
-        fetch("http://localhost:3000/api/purchase-credit/purchase-credit-deadline")
+        fetch(`${API_URL}/api/purchase-credit/purchase-credit-deadline`)
         .then(response=>response.json())
         .then(data=>setSupplierCredit(data))
     }
     const fetchTotalSale = () =>{
-        fetch("http://localhost:3000/api/sales/todays-sales-total")
+        fetch(`${API_URL}/api/sales/todays-sales-total`)
         .then(response=>response.json())
         .then(data=>setTotalSale(parseFloat(data.todaysSalesTotal)))
     }
     const  fetchTotalPurchase = () =>{
-        fetch("http://localhost:3000/api/purchase/todays-purchase-total")
+        fetch(`${API_URL}/api/purchase/todays-purchase-total`)
         .then(response=>response.json())
         .then(data=>setTotalPurchase(parseFloat(data.todaysPurchaseTotal)))
     }

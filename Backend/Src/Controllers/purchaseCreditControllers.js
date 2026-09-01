@@ -30,7 +30,7 @@ const getPurchaseCreditById = async(req, res)=>{
         const [rows] = await db.query(
             `SELECT purchaseCreditId,
                 purchaseCreditAmount,
-                DATE-FORMAT(purchaseCreditDueDate, '%Y-%m-%d') AS purchaseCreditDate,
+                DATE_FORMAT(purchaseCreditDueDate, '%Y-%m-%d') AS purchaseCreditDate,
                 purchaseId,
                 supplierId
             FROM purchase_credit WHERE purchaseCreditId =?`,[id]
@@ -54,7 +54,7 @@ const getPurchaseCreditBySupplierId = async(req, res)=>{
             `SELECT 
                 purchaseCreditId,
                 purchaseCreditAmount,
-                DATE-FORMAT(purchaseCreditDueDate, '%Y-%m-%d') AS purchaseCreditDate,
+                DATE_FORMAT(purchaseCreditDueDate, '%Y-%m-%d') AS purchaseCreditDate,
                 purchaseId,
                 supplierId
             FROM purchase_credit WHERE supplierId=?`,[supplierId]
@@ -74,47 +74,68 @@ const createPurchaseCreditPayment = async (req, res) => {
     
     const { creditId } = req.params;
     const { purchaseCreditPaymentAmount } = req.body;
+    const connection = await db.getConnection();
     try {
+        await connection.beginTransaction();
         // Step 1: Check if credit exists
-        const [creditRows] = await db.query(
+        const [creditRows] = await connection.query(
             'SELECT purchaseCreditAmount FROM purchase_credit WHERE purchaseCreditId = ?', [creditId]
         );
 
         if (creditRows.length === 0) {
+            await connection.rollback();
             return res.status(404).json({ message: 'Purchase credit not found' });
         }
 
         // Step 2: Check if already fully paid
         if (creditRows[0].purchaseCreditAmount <= 0) {
+            await connection.rollback();
             return res.status(400).json({ message: 'This credit is already fully paid' });
         }
 
         // Step 3: Validate payment amount
-        if (!purchaseCreditPaymentAmount) {
-            return res.status(400).json({ message: 'Payment amount is required' });
+        if (
+            purchaseCreditPaymentAmount === undefined ||
+            purchaseCreditPaymentAmount === null ||
+            purchaseCreditPaymentAmount <= 0
+        ) {
+            await connection.rollback();
+        
+            return res.status(400).json({
+                message: 'Payment amount must be greater than 0'
+            });
         }
 
         // Step 4: Calculate remaining amount
-        const finalAmount = creditRows[0].purchaseCreditAmount - purchaseCreditPaymentAmount;
+        let finalAmount;
+        if(purchaseCreditPaymentAmount<=creditRows[0].purchaseCreditAmount){
+        finalAmount = creditRows[0].purchaseCreditAmount - purchaseCreditPaymentAmount;
+        }else{
+            await connection.rollback();
+            return res.status(400).json({message:"The payment amount can't be greater than the the remaining amount "})
+        }
 
         // Step 5: Insert payment record
-        await db.query(
+        await connection.query(
             'INSERT INTO purchase_credit_payment(purchaseCreditPaymentAmount, purchaseCreditId) VALUES (?, ?)',
             [purchaseCreditPaymentAmount, creditId]
         );
         // Step 6: Update credit amount
-        await db.query(
+        await connection.query(
             'UPDATE purchase_credit SET purchaseCreditAmount = ? WHERE purchaseCreditId = ?',
             [finalAmount, creditId]
         );
-
+        await connection.commit();
         res.status(201).json({
             message: 'Payment recorded successfully',
             remainingAmount: finalAmount
         });
 
     } catch (error) {
+        await connection.rollback();
         res.status(500).json({ message: 'Server error', error: error.message });
+    }finally{
+        connection.release();
     }
 };
 

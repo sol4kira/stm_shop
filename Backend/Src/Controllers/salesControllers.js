@@ -27,8 +27,18 @@ const createSale = async(req,res)=>{
             );
 
             await connection.query(
-                'UPDATE product SET productQuantity = productQuantity - ?, isActive = IF(productQuantity - ? <= 0, 0, 1) WHERE productId = ?',
-                [item.quantity, item.quantity, item.productId]
+                `UPDATE product
+                 SET
+                     productQuantity = productQuantity - ?,
+                     isActive = IF(productQuantity - ? <= 0, 0, 1)
+                 WHERE productId = ?
+                   AND productQuantity >= ?`,
+                [
+                    item.quantity,
+                    item.quantity,
+                    item.productId,
+                    item.quantity
+                ]
             );
         }
 

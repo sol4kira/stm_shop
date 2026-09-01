@@ -21,7 +21,7 @@ const getCustomerById = async(req,res)=>{
     );
 
     if(rows.length === 0){
-        res.status(404).json({message:'Customer not found'});
+        return res.status(404).json({message:'Customer not found'});
     }
     res.status(200).json(rows[0])
     }catch(error){
@@ -38,7 +38,7 @@ const getCustomerByName = async(req,res)=>{
     );
 
     if(rows === 0){
-        res.status(404).json({message:'Customer not found'});
+        return res.status(404).json({message:'Customer not found'});
     }
     res.status(200).json(rows[0])
     }catch(error){
@@ -100,7 +100,7 @@ const deleteCustomer= async(req,res)=>{
         if(result.affectedRows === 0){
             return res.status(404).json({message:'Customer not found'});
         }
-        res.status(200).json({message:'Supplier have been deleted successfully'});
+        res.status(200).json({message:'Customer have been deleted successfully'});
     }catch(error){
         res.status(500).json({message:'Server error',error: error.message});
     }

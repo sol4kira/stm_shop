@@ -17,7 +17,7 @@ function App() {
       <SideBar />
       <div style={{ marginLeft: "256px", padding: "20px" }}>
         <Routes>
-          <Route path="/DashBoard" element={<Dashboard />} />
+          <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/Purchases" element={<Purchases />} />
           <Route path="/Products" element={<Products />} />
           <Route path="/Sales" element={<Sales />} />

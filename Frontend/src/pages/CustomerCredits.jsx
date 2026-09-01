@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react";
 import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
+import { API_URL } from "../../client";
 
 function CustomerCredit(){
     const [credit, setCredit] = useState([])
@@ -15,7 +16,7 @@ function CustomerCredit(){
     const [creditPayments, setCreditPayments] = useState([]);
 
     const fetchCustomerCredit = () => {
-                                    fetch("http://localhost:3000/api/sale-credit")
+                                    fetch(`${API_URL}/api/sale-credit`)
                                     .then(response => response.json())
                                     .then(data => setCredit(data));
                                 };
@@ -23,7 +24,7 @@ function CustomerCredit(){
     useEffect(() => {
         fetchCustomerCredit();
 
-        fetch("http://localhost:3000/api/customer")
+        fetch(`${API_URL}/api/customer`)
         .then(response=>response.json())
         .then(data=>setCustomer(data));
 
@@ -70,7 +71,7 @@ function CustomerCredit(){
                         return (
                             <tr key={item.saleCreditId} onClick={() => {
                                 setCreditHistory(item);
-                                fetch(`http://localhost:3000/api/sale-credit/${item.saleCreditId}/payments`)
+                                fetch(`${API_URL}/api/sale-credit/${item.saleCreditId}/payments`)
                                     .then(res => res.json())
                                     .then(data => setCreditPayments(data));
                             }}>
@@ -82,7 +83,7 @@ function CustomerCredit(){
                                 <button onClick={(e) => {
                                     e.stopPropagation();
                                     setSelectedCredit(item);
-                                    fetch(`http://localhost:3000/api/sale-credit/${item.saleCreditId}/payments`)
+                                    fetch(`${API_URL}/api/sale-credit/${item.saleCreditId}/payments`)
                                         .then(res => res.json())
                                         .then(data => setCreditPayments(data));
                                 }} className={styles.submit} disabled={parseFloat(item.saleCreditAmount) === 0}>Pay</button></td>
@@ -103,7 +104,7 @@ function CustomerCredit(){
                             <label htmlFor="pay">Amount to pay: </label>
                             <input type="number" value={payment.saleCreditPaymentAmount} onChange={(e) => setPayment({...payment,saleCreditPaymentAmount: e.target.value})}/>
                             <button disabled={paymentError} type="submit" className={styles.submit}onClick={() => {
-                                fetch(`http://localhost:3000/api/sale-credit/${selectedCredit.saleCreditId}/payment`, {
+                                fetch(`${API_URL}/api/sale-credit/${selectedCredit.saleCreditId}/payment`, {
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify(payment)

@@ -114,10 +114,3 @@ create table purchase_credit_payment(
 );
 
 
-INSERT INTO product(productId,~productName,productPurchasingPrice,productSellingPrice,color,productType,productQuantity,productDescription)
-VALUES (1,'MDF 18MM',200,500,'white','MDF',50,'white 18MM mdf');
-
-ALTER TABLE sale_payment MODIFY salePaymentId INT AUTO_INCREMENT;
-
-ALTER TABLE product ADD COLUMN isActive TINYINT DEFAULT 1;
-UPDATE product SET isActive = 1 WHERE productQuantity > 0;

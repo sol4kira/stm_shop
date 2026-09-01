@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react"
 import products from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
+import { API_URL } from "../../client";
 
 function Products(){
    const [product, setProduct] = useState([]);
@@ -22,7 +23,7 @@ function Products(){
 const [loading, setLoading] = useState(true);
 
     const fetchProducts = () => {
-                                    fetch("http://localhost:3000/api/products")
+                                    fetch(`${API_URL}/api/products`)
                                     .then(response => response.json())
                                     .then(data => {setProduct(data);
                                         setLoading(false);
@@ -92,7 +93,7 @@ const [loading, setLoading] = useState(true);
                             <textarea value={newProduct.productDescription} onChange={(e) => setNewProduct({...newProduct, productDescription: e.target.value})}/>
 
                             <button type="submit" className={products.submit} onClick={()=>{
-                                fetch(`http://localhost:3000/api/products`,{
+                                fetch(`${API_URL}/api/products`,{
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(newProduct)
@@ -143,7 +144,7 @@ const [loading, setLoading] = useState(true);
                 <tbody className={products.body}>
                     {sortedProducts.filter(item => item.productName.toLowerCase().includes(searchTerm.toLowerCase()))
                     .map(item=>(
-                    <tr key={item.productId} onClick={()=>setSelectedProduct(item)} onClick={() => { setSelectedProduct(item);setEditData(item);}}>
+                    <tr key={item.productId} onClick={() => { setSelectedProduct(item);setEditData(item);}}>
                     <td className={products.att}>{item.productName}</td>
                     <td className={products.att}>{item.productPurchasingPrice}</td>
                     <td className={products.att}>{item.productSellingPrice}</td>
@@ -185,7 +186,7 @@ const [loading, setLoading] = useState(true);
                             <div className={products.modelButton}>
                                 <button type="submit"className={products.submit} 
                                         onClick={() => {
-                                        fetch(`http://localhost:3000/api/products/${editData.productId}`, {
+                                        fetch(`${API_URL}/api/products/${editData.productId}`, {
                                             method: 'PUT',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(editData)

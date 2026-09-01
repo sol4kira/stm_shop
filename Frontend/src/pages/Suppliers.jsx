@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react"
 import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
+import { API_URL } from "../../client";
 
 function Suppliers(){
    const [supplier, setSupplier] = useState([]);
@@ -16,7 +17,7 @@ function Suppliers(){
    })
 
     const fetchSupplier = () => {
-                                    fetch("http://localhost:3000/api/supplier")
+                                    fetch(`${API_URL}/api/supplier`)
                                     .then(response => response.json())
                                     .then(data => setSupplier(data));
                                 };
@@ -59,7 +60,7 @@ function Suppliers(){
 
                             
                             <button type="submit" className={styles.submit} onClick={()=>{
-                                fetch(`http://localhost:3000/api/supplier`,{
+                                fetch(`${API_URL}/api/supplier`,{
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(newSupplier)
@@ -122,7 +123,7 @@ function Suppliers(){
                             <div className={styles.modelButton}>
                                 <button type="submit"className={styles.submit} 
                                         onClick={() => {
-                                        fetch(`http://localhost:3000/api/supplier/${editData.supplierId}`, {
+                                        fetch(`${API_URL}/api/supplier/${editData.supplierId}`, {
                                             method: 'PUT',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(editData)

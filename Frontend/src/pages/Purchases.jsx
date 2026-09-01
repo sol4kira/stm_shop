@@ -3,6 +3,7 @@ import styles from "./product.module.css"
 import purchaseStyle from "./sales.module.css"
 import { FaTimes } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
+import { API_URL } from "../../client";
 
 function Purchase(){
     const [purchase,setPurchase] = useState([]);
@@ -33,18 +34,18 @@ function Purchase(){
         supplierPhoneNumber:""
     })
     const fetchSales=(() =>{
-        fetch("http://localhost:3000/api/purchase")
+        fetch(`${API_URL}/api/purchase`)
             .then(res => res.json())
             .then(data => setPurchase(data));
     })
 
     useEffect(() => {
         fetchSales();
-    fetch("http://localhost:3000/api/supplier")
+    fetch(`${API_URL}/api/supplier`)
         .then(res => res.json())
         .then(data => setSupplier(data));
 
-    fetch("http://localhost:3000/api/products")
+    fetch(`${API_URL}/api/products`)
         .then(res => res.json())
         .then(data => setProduct(data));
 
@@ -155,7 +156,7 @@ function Purchase(){
                                             <label htmlFor="productDescription">Product Description</label>
                                             <textarea name="productDescription" value={newProduct.productDescription} onChange={(e)=>setNewProduct({...newProduct, productDescription: e.target.value})}></textarea>
                                                 <button type="button" className={styles.addButton} onClick={() => {
-                                                    fetch("http://localhost:3000/api/products", {
+                                                    fetch(`${API_URL}/api/products`, {
                                                         method: "POST",
                                                         headers: { "Content-Type": "application/json" },
                                                         body: JSON.stringify(newProduct)
@@ -164,7 +165,7 @@ function Purchase(){
                                                     .then(data => {
                                                         updateItem(index, "productId", data.product_id);
                                                         // refresh product list
-                                                        fetch("http://localhost:3000/api/products")
+                                                        fetch(`{API_URL}/api/products`)
                                                             .then(res => res.json())
                                                             .then(data => setProduct(data));
                                                     })
@@ -225,7 +226,7 @@ function Purchase(){
                                             <input type="number" value={newSupplier.supplierPhoneNumber} onChange={(e)=>setNewSupplier({...newSupplier, supplierPhoneNumber: e.target.value})}/>
 
                                             <button type="submit"className={styles.addButton} onClick={() => {
-                                                    fetch("http://localhost:3000/api/supplier", {
+                                                    fetch(`${API_URL}/api/supplier`, {
                                                         method: "POST",
                                                         headers: { "Content-Type": "application/json" },
                                                         body: JSON.stringify(newSupplier)
@@ -233,7 +234,7 @@ function Purchase(){
                                                     .then(res => res.json())
                                                     .then(data => {
                                                         setSupplierId(data.supplier_id);
-                                                        fetch("http://localhost:3000/api/supplier")
+                                                        fetch(`${API_URL}/api/supplier`)
                                                             .then(res => res.json())
                                                             .then(suppliers => setSupplier(suppliers));
                                                     })
@@ -250,7 +251,7 @@ function Purchase(){
                             <div className={purchaseStyle.bot}>
                             <button type="button" className={purchaseStyle.addButton} onClick={addItem}>Add Item</button>
                             <button type="submit" className={purchaseStyle.submit} disabled={ hasPaymentError || hasSupplierError} onClick={()=>{
-                                                            fetch(`http://localhost:3000/api/purchase`, {
+                                                            fetch(`${API_URL}/api/purchase`, {
                                                                 method: 'POST',
                                                                 headers: { 'Content-Type': 'application/json' },
                                                                 body: JSON.stringify(purchaseData)
@@ -300,7 +301,7 @@ function Purchase(){
                         })
                         .map(item => (
                             <tr key={item.purchaseId} onClick={() => {
-                                    fetch(`http://localhost:3000/api/purchase/${item.purchaseId}`)
+                                    fetch(`${API_URL}/api/purchase/${item.purchaseId}`)
                                         .then(res => res.json())
                                         .then(data => {
                                             setSelectedPurchase(data);

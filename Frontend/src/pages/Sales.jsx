@@ -3,6 +3,7 @@ import styles from "./product.module.css"
 import saleStyle from "./sales.module.css"
 import { FaTimes } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
+import { API_URL } from "../../client";
 
 function Sales(){
     const [sale,setSale] = useState([]);
@@ -21,18 +22,18 @@ function Sales(){
     const [loading, setLoading] = useState(true);
     const [customers, setCustomers] = useState([]);
     const fetchSales=(() =>{
-        fetch("http://localhost:3000/api/sales")
+        fetch(`${API_URL}/api/sales`)
             .then(res => res.json())
             .then(data => {setSale(data);
                 setLoading(false);});
     })
     useEffect(() => {
         fetchSales();
-    fetch("http://localhost:3000/api/customer")
+    fetch(`${API_URL}/api/customer`)
         .then(res => res.json())
         .then(data => setCustomers(data));
 
-    fetch("http://localhost:3000/api/products")
+    fetch(`${API_URL}/api/products`)
         .then(res => res.json())
         .then(data => setProduct(data));
 
@@ -201,7 +202,7 @@ function Sales(){
                             <div className={saleStyle.bot}>
                             <button type="button" className={saleStyle.addButton} onClick={addItem}>Add Item</button>
                             <button type="submit" className={saleStyle.submit} disabled={hasStockError || hasPaymentError||hasCustomerError} onClick={()=>{
-                                                            fetch(`http://localhost:3000/api/sales`, {
+                                                            fetch(`${API_URL}/api/sales`, {
                                                                 method: 'POST',
                                                                 headers: { 'Content-Type': 'application/json' },
                                                                 body: JSON.stringify(saleData)
@@ -251,7 +252,7 @@ function Sales(){
                         })
                         .map(item => (
                             <tr key={item.saleId} onClick={() => {
-                                    fetch(`http://localhost:3000/api/sales/${item.saleId}`)
+                                    fetch(`${API_URL}/api/sales/${item.saleId}`)
                                         .then(res => res.json())
                                         .then(data => {
                                             setSelectedSales(data);

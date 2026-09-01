@@ -12,6 +12,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import {FaTimes} from "react-icons/fa"
 import * as XLSX from "xlsx";
+import { API_URL } from "../../client";
 
 const getDateRange = (filterType) =>{
         const today = new Date()
@@ -82,27 +83,27 @@ function Report(){
 
 
     const fetchPurchaseSummary = (from,to) =>{
-        fetch(`http://localhost:3000/api/purchase/report-summary?from=${from}&to=${to}`)
+        fetch(`${API_URL}/api/purchase/report-summary?from=${from}&to=${to}`)
             .then(response => response.json())
             .then(data => setPurchaseSummary(data));
     }
     const fetchSalesSummary = (from,to) =>{
-        fetch(`http://localhost:3000/api/sales/report-summary?from=${from}&to=${to}`)
+        fetch(`${API_URL}/api/sales/report-summary?from=${from}&to=${to}`)
             .then(response => response.json())
             .then(data => setSalesSummary(data));
     }
     const fetchCustomerCreditSummery = ()=>{
-        fetch("http://localhost:3000/api/sale-credit/report-summary-total")
+        fetch("${API_URL}/api/sale-credit/report-summary-total")
         .then(response=>response.json())
         .then(data=>setCustomerCredit(data))
     }
     const fetchDay1Sales = (date) => {
-    fetch(`http://localhost:3000/api/sales/report-summary?from=${date}&to=${date}`)
+    fetch(`${API_URL}/api/sales/report-summary?from=${date}&to=${date}`)
         .then(response => response.json())
         .then(data => setDay1Result(data));
     }
     const fetchDay2Sales = (date) => {
-        fetch(`http://localhost:3000/api/sales/report-summary?from=${date}&to=${date}`)
+        fetch(`${API_URL}/api/sales/report-summary?from=${date}&to=${date}`)
             .then(response => response.json())
             .then(data => setDay2Result(data));
     }
@@ -123,9 +124,9 @@ function Report(){
     const exportToExcel = (type) => {
     let url;
     if (type === "sales") {
-        url = `http://localhost:3000/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=10000`;
+        url = `${API_URL}/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=10000`;
     } else {
-        url = `http://localhost:3000/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=10000`;
+        url = `${API_URL}/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=10000`;
     }
 
     fetch(url)
@@ -222,7 +223,7 @@ function Report(){
                     setPageNumber(1)
                     setModalData({});
                     setActiveModal("sales")
-                    fetchModalDetails(`http://localhost:3000/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=5`)
+                    fetchModalDetails(`${API_URL}/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=5`)
                 }}>
                     <ShoppingBag className={report.icon}/>
                     <h3>Total Sale</h3>
@@ -233,7 +234,7 @@ function Report(){
                     setPageNumber(1)
                     setModalData({});
                     setActiveModal("purchase")
-                    fetchModalDetails(`http://localhost:3000/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=5`)
+                    fetchModalDetails(`${API_URL}/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=1&limit=5`)
                     }}>
                     <UserRoundPlus className={report.icon}/>
                     <h3>Total Purchase</h3>
@@ -249,7 +250,7 @@ function Report(){
                     setPageNumber(1)
                     setModalData({});
                     setActiveModal("customerCredit")
-                    fetchModalDetails(`http://localhost:3000/api/sale-credit/report-summary?page=1&limit=5`)
+                    fetchModalDetails(`${API_URL}/api/sale-credit/report-summary?page=1&limit=5`)
                     }}>
                     <CreditCard className={report.icon}/>
                     <h3>Customer Credit</h3>
@@ -358,11 +359,11 @@ function Report(){
                                         setPageNumber(newPage);
                                         let url;
                                         if (activeModal === "sales") {
-                                            url = `http://localhost:3000/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
+                                            url = `${API_URL}/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
                                         } else if (activeModal === "purchase") {
-                                            url = `http://localhost:3000/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
+                                            url = `${API_URL}/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
                                         } else {
-                                            url = `http://localhost:3000/api/sale-credit/report-details?page=${newPage}&limit=5`;
+                                            url = `${API_URL}/api/sale-credit/report-details?page=${newPage}&limit=5`;
                                         }
                                         fetchModalDetails(url);
                                     }}>Previous</button>
@@ -377,11 +378,11 @@ function Report(){
                                                 setPageNumber(newPage);
                                                 let url;
                                                 if (activeModal === "sales") {
-                                                    url = `http://localhost:3000/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
+                                                    url = `${API_URL}/api/sales/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
                                                 } else if (activeModal === "purchase") {
-                                                    url = `http://localhost:3000/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
+                                                    url = `${API_URL}/api/purchase/report-details?from=${activeFrom}&to=${activeTo}&page=${newPage}&limit=5`;
                                                 } else {
-                                                    url = `http://localhost:3000/api/sale-credit/report-details?page=${newPage}&limit=5`;
+                                                    url = `${API_URL}/api/sale-credit/report-details?page=${newPage}&limit=5`;
                                                 }
                                                 fetchModalDetails(url);
                                     }}>
