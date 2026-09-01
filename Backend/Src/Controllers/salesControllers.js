@@ -154,9 +154,10 @@ const getSalesDetails = async (req, res) => {
     const offset = (page - 1) * limit;
     try {
         const [rows] = await db.query(
-            `SELECT s.saleId, s.saleTotalAmount, s.saleDate
+            `SELECT s.saleId, s.saleTotalAmount, s.saleDate,ss.salePaymentType, c.customerName
              FROM sale s
              LEFT JOIN sale_payment ss on s.saleId = ss.saleId
+             LEFT JOIN customer as c on s.customerId = c.customerId
              WHERE DATE(saleDate) BETWEEN ? AND ?
              ORDER BY saleDate DESC
              LIMIT ? OFFSET ?

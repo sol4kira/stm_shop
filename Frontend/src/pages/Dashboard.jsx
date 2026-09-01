@@ -52,7 +52,7 @@ function Dashboard(){
             </div>
             <div className={styles.dashboardGrid}>
                 <div className={styles.tablesColumn}>
-                    <table className={styles.lowStockTable} onClick={() => navigate('/Products')}>
+                    <table className={styles.lowStockTable} onClick={() => navigate('/products')}>
                         <thead>
                             <tr>
                                 <th className={styles.names}>Product Name</th>
@@ -131,7 +131,7 @@ function Dashboard(){
                         <p className={styles.cardInput}>{totalSale.toFixed(2)}</p>
                     </div>
                                         
-                    <div className={styles.totalCard} onClick={() => navigate('/purchase')}>
+                    <div className={styles.totalCard} onClick={() => navigate('/Purchases')}>
                         <TbUserDollar size={32} />
                         <h3>Purchase</h3>
                         <p className={styles.cardLabel}>Today's Purchase Total</p>

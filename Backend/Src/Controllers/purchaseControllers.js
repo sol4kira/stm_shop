@@ -159,9 +159,10 @@ const getPurchaseDetails = async (req, res) => {
     const offset = (page - 1) * limit;
     try {
         const [rows] = await db.query(
-            `SELECT p.purchaseId, p.purchaseTotalAmount, p.purchaseDate
+            `SELECT p.purchaseId, p.purchaseTotalAmount, p.purchaseDate, pp.purchasePaymentType, s.supplierName
              FROM purchase p
              LEFT JOIN purchase_payment pp on p.purchaseId = pp.purchaseId
+             LEFT JOIN supplier s on s.supplierId = p.supplierId
              WHERE DATE(purchaseDate) BETWEEN ? AND ?
              ORDER BY purchaseDate DESC
              LIMIT ? OFFSET ?

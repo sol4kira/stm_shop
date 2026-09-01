@@ -104,6 +104,78 @@
     color: #888;
     margin: 0;
 }
+.closeButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+.paginationRow {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 16px;
+    margin-left: 26% ;
+}
+
+.pre,.next{
+    position: static;
+    background: #FFF8E7;
+    color: #F5A623;
+    border: 1px solid #F5A623;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.pre:hover,.next:hover{
+    background: #F5A623;
+    color: #FFF8E7;
+}
+.pre:disabled,.next:disabled{
+    background: #F5F1E8;
+    color: #B8A98D;
+    border-color: #E5DCCB;
+}
+.next{
+    align-items: flex-end;
+}
+.top{
+    display: flex;
+    margin-top: 30px;
+}
+.top button{
+    margin-left: 230px;
+    margin-bottom:10px;
+    height:40px ;
+    width:153px ;
+}
+
 
 .compareSection {
     margin-top: 24px;
@@ -175,4 +247,17 @@
     height:28px;
     stroke-width:1.8;
     color: #333;
+}
+table {
+        border-collapse: collapse;
+        width: 90%;
+        margin-left: 20px;
+        border-radius: 10px;
+        background-color: #FFF8E7;
+}
+
+.att, .names {
+        border: 1px solid #A0A0A0;
+        padding: 10px;
+        text-align: center;
 }
