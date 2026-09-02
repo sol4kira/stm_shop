@@ -59,6 +59,9 @@ const createSupplier = async(req,res)=>{
         if(!supplierName || !supplierPhoneNumber){
             return res.status(400).json({message:'Required filled are not filled'});
         }
+        if(!/^\d{10}$/.test(supplierPhoneNumber)){
+            return res.status(400).json({message:"Phone Number must be 10 digits"})
+        }
 
         const[result] = await db.query(
             'INSERT INTO supplier(supplierName,supplierPhoneNumber) VALUES(?,?)',

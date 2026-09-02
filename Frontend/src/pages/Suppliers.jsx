@@ -38,7 +38,7 @@ function Suppliers(){
     return(
         <div>
             <div className={styles.top}>
-                <h1 className={styles.title}>supplier</h1>
+                <h1 className={styles.title}>Supplier</h1>
                 <button type="button" className={styles.addButton} onClick={()=>{setShowAddModel(true)}}>+  ADD supplier</button>
                     {showAddModel && (
                     <div className={styles.overlay}>

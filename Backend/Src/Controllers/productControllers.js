@@ -36,8 +36,14 @@ const createProduct = async(req,res)=>{
             productName,productPurchasingPrice,productSellingPrice,color,productType,productQuantity,productDescription
         } = req.body;
 
-        if(!productName || !productPurchasingPrice ===undefined || !productSellingPrice===undefined || !productQuantity===undefined ){
-            return res.status(400).json({ message: 'Required filled must be filled'});
+        if (
+            productPurchasingPrice < 0 ||
+            productSellingPrice < 0 ||
+            productQuantity < 0
+        ) {
+            return res.status(400).json({
+                message: 'Prices and quantity cannot be negative'
+            });
         }
 
         const [result] = await db.query(

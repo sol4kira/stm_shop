@@ -37,7 +37,7 @@ const getCustomerByName = async(req,res)=>{
         'SELECT * FROM customer WHERE customerName=?',[name]
     );
 
-    if(rows === 0){
+    if(rows.length === 0){
         return res.status(404).json({message:'Customer not found'});
     }
     res.status(200).json(rows[0])
@@ -56,6 +56,9 @@ const createCustomer = async(req,res)=>{
 
         if(!customerId|| !customerName || !customerPhoneNumber){
             return res.status(400).json({message:'Required filled are not filled'});
+        }
+        if(!/^\d{10}$/.test(customerPhoneNumber)){
+            return res.status(400).json({message:"Phone Number must be 10 digits"})
         }
 
         const[result] = await db.query(
