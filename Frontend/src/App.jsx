@@ -1,5 +1,5 @@
 import SideBar from "./components/SideBar";
-import Dashboard from "./pages/DashBoard";
+import Dashboard from "./pages/Dashboard";
 import Purchases from "./pages/Purchases";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
