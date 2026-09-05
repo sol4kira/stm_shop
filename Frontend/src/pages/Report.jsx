@@ -93,7 +93,7 @@ function Report(){
             .then(data => setSalesSummary(data));
     }
     const fetchCustomerCreditSummery = ()=>{
-        fetch("${API_URL}/api/sale-credit/report-summary-total")
+        fetch(`${API_URL}/api/sale-credit/report-summary-total`)
         .then(response=>response.json())
         .then(data=>setCustomerCredit(data))
     }
