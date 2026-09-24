@@ -23,6 +23,10 @@
     app.use('/api/purchase-credit', purchaseCreditRoute)
     app.use('/api/sale-credit',saleCreditRoute)
 
+    app.get('/api/health', (req, res) => {
+      res.status(200).send('OK');
+    });
+
    const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
