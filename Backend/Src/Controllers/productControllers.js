@@ -5,9 +5,10 @@ const getAllProducts = async(req, res)=>{
     try{
         const [rows] = await db.query('SELECT * FROM product')
         res.status(200).json(rows)
-    }catch(error){
-        res.status(500).json({message: 'Server error', error: error.message});
-    }
+    }catch (err) {
+  console.error(err);
+  res.status(500).json({ message: err.message, stack: err.stack });
+}
 };
 
 //GET one
@@ -24,9 +25,10 @@ const getProductById = async (req,res)=>{
         res.status(200).json(rows[0]);
 
       } 
-      catch(error){
-        res.status(500).json({message: 'Server error', error: error.message});
-      }
+      catch (err) {
+  console.error(err);
+  res.status(500).json({ message: err.message, stack: err.stack });
+}
 };
 
 //Create
@@ -52,9 +54,10 @@ const createProduct = async(req,res)=>{
         );
 
          res.status(201).json({ message: 'Product created', product_id: result.insertId });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
-    };
+    } catch (err) {
+  console.error(err);
+  res.status(500).json({ message: err.message, stack: err.stack });
+}
 
 }
 
@@ -76,9 +79,10 @@ const updateProduct = async(req,res)=>{
         }
 
         res.status(200).json({ message: 'Product updated' });
-    } catch(error){
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
+    } catch (err) {
+  console.error(err);
+  res.status(500).json({ message: err.message, stack: err.stack });
+}
 };
 
 //Delete
@@ -95,9 +99,10 @@ const deleteProduct = async(req,res)=>{
             return res.status(404).json({message:'Product not found'});
         }
         res.status(200).json({message:'Product Deleted.'});
-    }catch(error){
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
+    }catch (err) {
+  console.error(err);
+  res.status(500).json({ message: err.message, stack: err.stack });
+}
 }
 //low stack
 const getLowStockProducts = async (req, res) => {
@@ -110,9 +115,10 @@ const getLowStockProducts = async (req, res) => {
             LIMIT 5`
         );
         res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
+    }catch (err) {
+  console.error(err);
+  res.status(500).json({ message: err.message, stack: err.stack });
+}
 };
 
 
