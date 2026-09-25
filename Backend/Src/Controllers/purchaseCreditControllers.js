@@ -12,10 +12,6 @@ const  getPurchaseCredit = async(req,res)=>{
                 supplierId
             FROM purchase_credit`
         );
-
-        if(rows.length === 0){
-            return res.status(404).json({message:'Purchase Credit not found'});
-        }
         res.status(200).json(rows);
     }catch(error){
         res.status(500).json({message:'Server error.',error:error.message});

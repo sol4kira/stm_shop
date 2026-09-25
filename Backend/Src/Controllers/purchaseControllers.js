@@ -77,10 +77,6 @@ const getAllPurchase = async(req,res)=>{
             FROM purchase p
             LEFT JOIN purchase_payment pp on p.purchaseId = pp.purchaseId`
         );
-
-        if(rows.length === 0){
-            return res.status(404).json({message:'Purchase not found'});
-        }
         res.status(200).json(rows);
     }catch(error){
         res.status(500).json({message:'Server error.',error:error.message});

@@ -81,10 +81,6 @@ const getAllSale = async(req,res)=>{
             LEFT JOIN sale_payment sp ON s.saleId = sp.saleId`
         );
 
-    if(rows.length === 0){
-        return res.status(404).json({message:'Sales not found.'});
-    }
-
     res.status(200).json(rows);
     }catch(error){
         res.status(500).json({message:'Server error',error:error.message});
