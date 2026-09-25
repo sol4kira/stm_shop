@@ -49,8 +49,8 @@ const createProduct = async(req,res)=>{
         }
 
         const [result] = await db.query(
-            'INSERT INTO product (productName, productPurchasingPrice, productSellingPrice, color, productType, productQuantity, productDescription) VALUES (?,?,?,?,?,?,?)',
-            [productName,productPurchasingPrice,productSellingPrice,color,productType,productQuantity,productDescription]
+            'INSERT INTO product (productName, productPurchasingPrice, productSellingPrice, color, productType, productQuantity, productDescription, isActive) VALUES (?,?,?,?,?,?,?,?)',
+            [productName, productPurchasingPrice, productSellingPrice, color, productType, productQuantity, productDescription, productQuantity > 0 ? 1 : 0]
         );
 
          res.status(201).json({ message: 'Product created', product_id: result.insertId });
