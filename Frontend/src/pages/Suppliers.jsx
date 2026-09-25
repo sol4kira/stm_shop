@@ -2,6 +2,7 @@ import { useState,useEffect } from "react"
 import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
 import { API_URL } from "../../client";
+import toast from "react-hot-toast";
 
 function Suppliers(){
    const [supplier, setSupplier] = useState([]);
@@ -65,14 +66,21 @@ function Suppliers(){
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(newSupplier)
                                 })
-                                .then(res => res.json())
-                                .then(data => {
-                                setShowAddModel(false)
-                                setNewSupplier({
-                                    supplierName: "",
-                                    supplierPhoneNumber: ""
-                                });
-                                fetchSupplier();
+                                .then(async res => {
+                                    const data = await res.json();
+                                    if (!res.ok) {
+                                        throw new Error(data.message || 'Something went wrong');
+                                    }
+                                    setShowAddModel(false)
+                                    setNewSupplier({
+                                        supplierName: "",
+                                        supplierPhoneNumber: ""
+                                    });
+                                    fetchSupplier();
+                                    toast.success('Supplier added successfully');
+                                })
+                                .catch(err => {
+                                    toast.error(err.message);
                                 })
                             }}>Save</button>
                         </div>
@@ -128,10 +136,17 @@ function Suppliers(){
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(editData)
                                         })
-                                        .then(res => res.json())
-                                        .then(data => {
+                                        .then(async res => {
+                                            const data = await res.json();
+                                            if (!res.ok) {
+                                                throw new Error(data.message || 'Something went wrong');
+                                            }
                                             setSelectedSupplier(null)
                                             fetchSupplier();
+                                            toast.success('Supplier updated successfully');
+                                        })
+                                        .catch(err => {
+                                            toast.error(err.message);
                                         })
                                         }}>
                                         Edit</button>

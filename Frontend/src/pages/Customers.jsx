@@ -2,6 +2,7 @@ import { useState,useEffect } from "react"
 import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
 import { API_URL } from "../../client";
+import toast from "react-hot-toast";
 
 function Customers(){
    const [customer, setCustomer] = useState([]);
