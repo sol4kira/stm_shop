@@ -273,7 +273,7 @@ function Report(){
                                         Export to Excel
                                     </button>
                                     </div>
-                                    <table>
+                                    <table className={report.reportTable}>
                                         <thead className={report.header}>
                                             <tr>    
                                                 <th className={report.names}>customer Name</th>
@@ -303,7 +303,7 @@ function Report(){
                                         Export to Excel
                                     </button>
                                     </div>
-                                    <table>
+                                    <table className={report.reportTable}>
                                         <thead className={report.header}>
                                             <tr>    
                                                 <th className={report.names}>Supplier Name</th>
@@ -328,7 +328,7 @@ function Report(){
                             {activeModal === "customerCredit" && (
                                 <div>
                                     <h3>{formatFilterLabel(activeFilter )}'s Customer Credit Report</h3>
-                                    <table>  
+                                    <table className={report.reportTable}>  
                                         <thead className={report.header}>
                                             <tr>    
                                                 <th className={report.names}>Customer Name</th>

@@ -248,7 +248,7 @@
     stroke-width:1.8;
     color: #333;
 }
-table {
+.reportTable {
         border-collapse: collapse;
         width: 90%;
         margin-left: 20px;
