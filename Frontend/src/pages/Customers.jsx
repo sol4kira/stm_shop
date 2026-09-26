@@ -2,6 +2,8 @@ import { useState,useEffect } from "react"
 import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
 import { API_URL } from "../../client";
+import toast from "react-hot-toast";
+import { useFetch } from "@mantine/hooks";
 
 function Customers(){
    const [customer, setCustomer] = useState([]);
@@ -70,20 +72,22 @@ function Customers(){
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(newCustomer)
                                 })
-                                .then(res => {
+                                .then(async res => {
+                                    const data = await res.json();
                                     if (!res.ok) {
-                                        throw new Error("Failed to add customer");
+                                        throw new Error(data.message || "Failed to add data");
                                     }
-                                    return res.json();
-                                })
-                                .then(data => {
-                                setShowAddModel(false)
-                                setNewCustomer({
+                                    setShowAddModel(false)
+                                    setNewCustomer({
                                     customerId:"",
                                     customerName: "",
                                     customerPhoneNumber: ""
                                 });
                                 fetchCustomer();
+                                toast.success("Customer added successfully")
+                                })
+                                .catch(err => {
+                                    toast.error(err.message);
                                 })
                             }}>Save</button>
                         </div>
@@ -142,10 +146,17 @@ function Customers(){
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(editData)
                                         })
-                                        .then(res => res.json())
-                                        .then(data => {
+                                        .then(async res => {
+                                            const data = await res.json();
+                                            if (!res.ok) {
+                                                throw new Error(data.message || "Failed to edit customer data");
+                                            }
                                             setSelectedCustomer(null)
                                             fetchCustomer();
+                                            toast.success("Customer edited successfully")
+                                        })
+                                        .catch(err => {
+                                            toast.error(err.message);
                                         })
                                         }}>
                                         Edit</button>

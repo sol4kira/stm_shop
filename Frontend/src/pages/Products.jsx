@@ -2,6 +2,7 @@ import { useState,useEffect } from "react"
 import products from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
 import { API_URL } from "../../client";
+import toast from "react-hot-toast";
 
 function Products(){
    const [product, setProduct] = useState([]);
@@ -98,8 +99,11 @@ const [loading, setLoading] = useState(true);
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(newProduct)
                                 })
-                                .then(res => res.json())
-                                .then(data => {
+                                .then(async res => {
+                                    const data = await res.json();
+                                    if (!res.ok) {
+                                        throw new Error(data.message || 'Failed to add data');
+                                    }
                                 setShowAddModel(false)
                                 setNewProduct({
                                 productName: "",
@@ -111,6 +115,9 @@ const [loading, setLoading] = useState(true);
                                 productDescription: ""
                                 });
                                 fetchProducts();
+                                })
+                                .catch(err => {
+                                    toast.error(err.message);
                                 })
                             }}>Save</button>
                         </div>
@@ -191,10 +198,17 @@ const [loading, setLoading] = useState(true);
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(editData)
                                         })
-                                        .then(res => res.json())
-                                        .then(data => {
+                                        .then(async res => {
+                                            const data = await res.json();
+                                            if (!res.ok) {
+                                                throw new Error(data.message || 'Failed to edit data');
+                                            }
                                             setSelectedProduct(null)
                                             fetchProducts();
+                                            toast.success('Product edited successfully');
+                                        })
+                                        .catch(err => {
+                                            toast.error(err.message);
                                         })
                                         }}>
                                         Edit</button>

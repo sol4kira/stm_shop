@@ -4,6 +4,7 @@ import purchaseStyle from "./sales.module.css"
 import { FaTimes } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { API_URL } from "../../client";
+import toast from "react-hot-toast";
 
 function Purchase(){
     const [purchase,setPurchase] = useState([]);
@@ -161,13 +162,19 @@ function Purchase(){
                                                         headers: { "Content-Type": "application/json" },
                                                         body: JSON.stringify(newProduct)
                                                     })
-                                                    .then(res => res.json())
-                                                    .then(data => {
+                                                    .then(async res => {
+                                                        const data = await res.json();
+                                                        if (!res.ok) {
+                                                            throw new Error(data.message || 'Failed to add data');
+                                                        }
                                                         updateItem(index, "productId", data.product_id);
                                                         // refresh product list
                                                         fetch(`{API_URL}/api/products`)
                                                             .then(res => res.json())
                                                             .then(data => setProduct(data));
+                                                    })
+                                                    .catch(err => {
+                                                        toast.error(err.message);
                                                     })
                                                 }}>Save Product</button>
                                             </div>
@@ -231,12 +238,18 @@ function Purchase(){
                                                         headers: { "Content-Type": "application/json" },
                                                         body: JSON.stringify(newSupplier)
                                                     })
-                                                    .then(res => res.json())
-                                                    .then(data => {
+                                                    .then(async res => {
+                                                        const data = await res.json();
+                                                        if (!res.ok) {
+                                                            throw new Error(data.message || 'Failed to add data');
+                                                        }
                                                         setSupplierId(data.supplier_id);
                                                         fetch(`${API_URL}/api/supplier`)
                                                             .then(res => res.json())
                                                             .then(suppliers => setSupplier(suppliers));
+                                                    })
+                                                    .catch(err => {
+                                                        toast.error(err.message);
                                                     })
                                                 }}>save Supplier</button>
                                         </div>
@@ -256,16 +269,20 @@ function Purchase(){
                                                                 headers: { 'Content-Type': 'application/json' },
                                                                 body: JSON.stringify(purchaseData)
                                                             })
-                                                            .then(res => {
-                                                                if (!res.ok) throw new Error("Failed to add purchase");
-                                                                return res.json();
-                                                            })
-                                                            .then(data => {
+                                                            .then(async res => {
+                                                                const data = await res.json();
+                                                                if (!res.ok) {
+                                                                    throw new Error(data.message || 'Failed to add data');
+                                                                }
                                                                 setShowAddModel(false);
                                                                 setItems([{ productId: "", quantity: "", purchasePrice: "" }]);
                                                                 setPayment({ purchasePaymentType: "cash", purchasePaymentAmount: "" });
                                                                 setSupplierId("");
                                                                 fetchSales();
+                                                                toast.success('Purchase added successfully');
+                                                            })
+                                                            .catch(err => {
+                                                                toast.error(err.message);
                                                             })
                                                         }}>Save</button>
                             </div>

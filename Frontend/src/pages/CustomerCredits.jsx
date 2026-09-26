@@ -2,6 +2,7 @@ import { useState,useEffect } from "react";
 import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
 import { API_URL } from "../../client";
+import toast from "react-hot-toast";
 
 function CustomerCredit(){
     const [credit, setCredit] = useState([])
@@ -109,11 +110,18 @@ function CustomerCredit(){
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify(payment)
                                 })
-                                .then(res => res.json())
-                                .then(data => {
+                                .then(async res => {
+                                    const data = await res.json();
+                                    if (!res.ok) {
+                                        throw new Error(data.message || 'Failed to add data');
+                                    }
                                     setSelectedCredit(null);
                                     setPayment({ saleCreditPaymentAmount: "" });
                                     fetchCustomerCredit();
+                                    toast.success('Payment added successfully');
+                                })
+                                .catch(err => {
+                                    toast.error(err.message);
                                 });
                             }}>Pay</button>
                             {(()=>{

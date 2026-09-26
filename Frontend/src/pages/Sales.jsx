@@ -4,6 +4,7 @@ import saleStyle from "./sales.module.css"
 import { FaTimes } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { API_URL } from "../../client";
+import toast from "react-hot-toast";
 
 function Sales(){
     const [sale,setSale] = useState([]);
@@ -207,16 +208,19 @@ function Sales(){
                                                                 headers: { 'Content-Type': 'application/json' },
                                                                 body: JSON.stringify(saleData)
                                                             })
-                                                            .then(res => {
-                                                                if (!res.ok) throw new Error("Failed to add sale");
-                                                                return res.json();
-                                                            })
-                                                            .then(data => {
+                                                            .then(async res => {
+                                                                const data = await res.json();
+                                                                if (!res.ok) {
+                                                                    throw new Error(data.message || 'Failed to add data');
+                                                                }
                                                                 setShowAddModel(false);
                                                                 setItems([{ productId: "", quantity: "", salePrice: "" }]);
                                                                 setPayment({ salePaymentType: "cash", salePaymentAmount: "" });
                                                                 setCustomerId("");
                                                                 fetchSales();
+                                                            })
+                                                            .catch(err => {
+                                                                toast.error(err.message);
                                                             })
                                                         }}>Save</button>
                             </div>

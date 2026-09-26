@@ -139,7 +139,7 @@ function Suppliers(){
                                         .then(async res => {
                                             const data = await res.json();
                                             if (!res.ok) {
-                                                throw new Error(data.message || 'Something went wrong');
+                                                throw new Error(data.message || 'Failed to edit supplier data');
                                             }
                                             setSelectedSupplier(null)
                                             fetchSupplier();
