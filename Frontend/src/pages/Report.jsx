@@ -81,6 +81,8 @@ function Report(){
     const [pageNumber,setPageNumber] = useState(1)
     const [modalData,setModalData] = useState({})
 
+    const noModelData = !modalData.rows || modalData.rows.length === 0;
+
 
     const fetchPurchaseSummary = (from,to) =>{
         fetch(`${API_URL}/api/purchase/report-summary?from=${from}&to=${to}`)
@@ -269,7 +271,7 @@ function Report(){
                                 <div>
                                     <div className ={report.top}>
                                     <h3>{formatFilterLabel(activeFilter )}'s Sale Report</h3>
-                                    <button onClick={() => exportToExcel("sales")} className={report.applyButton}>
+                                    <button onClick={() => exportToExcel("sales")} className={report.applyButton} disabled={noModelData}>
                                         Export to Excel
                                     </button>
                                     </div>
@@ -299,7 +301,7 @@ function Report(){
                                 <div>
                                     <div className={report.top}>
                                     <h3>{formatFilterLabel(activeFilter )}'s purchase Report</h3>
-                                    <button onClick={() => exportToExcel("purchase")} className={report.applyButton}>
+                                    <button onClick={() => exportToExcel("purchase")} className={report.applyButton}  disabled={noModelData}>
                                         Export to Excel
                                     </button>
                                     </div>
