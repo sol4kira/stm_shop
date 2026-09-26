@@ -9,7 +9,7 @@ import Report from "./pages/Report";
 import CustomerCredits from "./pages/CustomerCredits";
 import SupplierCredits from "./pages/SupplierCredits";
 import Credits from "./pages/Credits";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
       <SideBar />
       <div style={{ marginLeft: "256px", padding: "20px" }}>
         <Routes>
+          <Route path="/" element={<Navigate replace to="/Dashboard" />} />
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/Purchases" element={<Purchases />} />
           <Route path="/Products" element={<Products />} />
