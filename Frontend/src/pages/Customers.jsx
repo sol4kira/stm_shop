@@ -3,7 +3,6 @@ import styles from "./product.module.css"
 import { FaTimes } from "react-icons/fa";
 import { API_URL } from "../../client";
 import toast from "react-hot-toast";
-import { useFetch } from "@mantine/hooks";
 
 function Customers(){
    const [customer, setCustomer] = useState([]);
@@ -89,7 +88,7 @@ function Customers(){
                                 .catch(err => {
                                     toast.error(err.message);
                                 })
-                            }}>Save</button>
+                            }}>ADD</button>
                         </div>
                     </div> 
                     )}   

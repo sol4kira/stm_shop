@@ -7,16 +7,16 @@ const getAllProducts = async(req, res)=>{
         res.status(200).json(rows)
     }catch (err) {
   console.error(err);
-  res.status(500).json({ message: err.message, stack: err.stack });
+  res.status(500).json({message:"Product failed to retreive",error:error.message});
 }
 };
 
-//GET one
+//GET one by id
 const getProductById = async (req,res)=>{
     try{
         const {id} = req.params;
         const [rows] = await db.query(
-            'SELECT * FROM Product WHERE ProductId = ?',[id]
+            'SELECT * FROM Product WHERE productId = ?',[id]
         );  
 
         if(rows.length === 0){
@@ -27,7 +27,7 @@ const getProductById = async (req,res)=>{
       } 
       catch (err) {
   console.error(err);
-  res.status(500).json({ message: err.message, stack: err.stack });
+  res.status(500).json({message:"Product failed to retreive.",error:error.message});
 }
 };
 
@@ -56,7 +56,7 @@ const createProduct = async(req,res)=>{
          res.status(201).json({ message: 'Product created', product_id: result.insertId });
     } catch (err) {
   console.error(err);
-  res.status(500).json({ message: err.message, stack: err.stack });
+  res.status(500).json({message:"Product failed to create",error:error.message});
 }
 
 }
@@ -81,7 +81,7 @@ const updateProduct = async(req,res)=>{
         res.status(200).json({ message: 'Product updated' });
     } catch (err) {
   console.error(err);
-  res.status(500).json({ message: err.message, stack: err.stack });
+  res.status(500).json({message:"Product failed",error:error.message});
 }
 };
 
@@ -91,7 +91,7 @@ const deleteProduct = async(req,res)=>{
         const{id} = req.params;
         
         const [result] = await db.query(
-            'DELETE FROM Product WHERE productId =?',
+            'DELETE FROM product WHERE productId =?',
             [id]
         );
 
@@ -101,7 +101,7 @@ const deleteProduct = async(req,res)=>{
         res.status(200).json({message:'Product Deleted.'});
     }catch (err) {
   console.error(err);
-  res.status(500).json({ message: err.message, stack: err.stack });
+  res.status(500).json({message:"Product failed",error:error.message});
 }
 }
 //low stack
@@ -117,7 +117,7 @@ const getLowStockProducts = async (req, res) => {
         res.status(200).json(products);
     }catch (err) {
   console.error(err);
-  res.status(500).json({ message: err.message, stack: err.stack });
+  res.status(500).json({message:"Product failed",error:error.message});
 }
 };
 
